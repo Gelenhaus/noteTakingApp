@@ -1,5 +1,5 @@
 const express = require('express');
-const { notes } = require('./db/db.json');
+let db = require('./db/db.json');
 const fs = require('fs');
 const path = require('path');
 
@@ -12,25 +12,37 @@ app.use(express.urlencoded({ extended: true }));
 // parse incoming JSON data
 app.use(express.json());
 
-function createNewNote(body, notesArray) {
-    const note = body;
-    notesArray.push(note);
-    fs.writeFileSync(
-        path.join(__dirname, './db/db.json'),
-        JSON.stringify({ db: notesArray }, null, 2)
-    );
-    return note;
-}
+//Public
+app.use(express.static("public"))
 
-app.get('/api/db', (req, res) => {
+
+
+app.get('/api/notes', (req, res) => {
+    db = JSON.parse(fs.readFileSync("./db/db.json")) || []
+    console.log("Get", db)
     res.json(db);
 });
 
-app.post('/api/db', (req, res) => {
+app.post('/api/notes', (req, res) => {
     // req.body is where our incoming content will be
-    const note = createNewNote(req.body, notes);
+    const note = createNewNote(req.body, db);
+    console.log("Post", note)
     res.json(note);
-
+    function createNewNote(body, notesArray) {
+        const note = {
+            id: Math.floor(math.random() * 1000),
+            title: body.title,
+            text: body.text
+        }
+        notesArray.push(note);
+        fs.writeFileSync(
+            path.join(__dirname, './db/db.json'),
+            JSON.stringify(notesArray), function (err, data) {
+                if (err) throw err;
+            }
+        );
+        return notesArray;
+    }
 });
 
 
