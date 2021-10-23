@@ -1,12 +1,19 @@
 {
-    "mytest": [
-        {
-            "title": "Test Title",
-            "text": "Test text"
-        },
-        {
-            "title": "Another Test",
-            "text": "Another text"
-        }
-    ]
+  "db": [
+    {
+      "id": "0",
+      "title": "Test Title",
+      "text": "Test text"
+    },
+    {
+      "id": "1",
+      "title": "Another Test",
+      "text": "Another text"
+    },
+    {
+      "id": "3",
+      "title": "fourth note",
+      "text": "This is mah fourth note"
+    }
+  ]
 }

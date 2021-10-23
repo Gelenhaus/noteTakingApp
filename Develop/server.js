@@ -1,18 +1,37 @@
 const express = require('express');
-const db = require('./db/db.json');
-//the {} was trying to grab something within the db file
+const { notes } = require('./db/db.json');
+const fs = require('fs');
+const path = require('path');
 
-const app = express();
 const PORT = process.env.PORT || 3001;
+const app = express();
 
+// parse incoming string or array data
+app.use(express.urlencoded({ extended: true }));
+
+// parse incoming JSON data
+app.use(express.json());
+
+function createNewNote(body, notesArray) {
+    const note = body;
+    notesArray.push(note);
+    fs.writeFileSync(
+        path.join(__dirname, './db/db.json'),
+        JSON.stringify({ db: notesArray }, null, 2)
+    );
+    return note;
+}
 
 app.get('/api/db', (req, res) => {
     res.json(db);
 });
 
-// app.get('/api/db', (req, res) => {
-//     res.send("This is working.");
-// });
+app.post('/api/db', (req, res) => {
+    // req.body is where our incoming content will be
+    const note = createNewNote(req.body, notes);
+    res.json(note);
+
+});
 
 app.listen(PORT, () => {
     console.log(`API server now on port ${PORT}!`);
